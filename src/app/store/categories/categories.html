@@ -1,0 +1,10 @@
+<section>
+    @for (category of productCategories; track category) {
+        <a class="text-blue-600 underline" 
+        [routerLink]="['/products']" 
+        [queryParams]="{ category: category.slug}">
+        {{category.name}}
+        </a>
+        <p></p>
+    }
+</section>
