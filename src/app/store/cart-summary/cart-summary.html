@@ -108,17 +108,24 @@
     <div class="flex flex-col">
       <div class="flex justify-between">
         <p>Subtotal:</p>
-        <p>{{ grandTotal() | number: "1.2-2" }}</p>
+        <div class="flex items-center">
+            <lucide-icon [img]="PhilippinePeso" class="w-4"></lucide-icon>
+            <p>{{ grandTotal() | number: "1.2-2" }}</p>
+          </div>
       </div>
       @if (cartService.selectedCoupon()) {
         <div class="flex justify-between text-green-500">
           <p>Discount:</p>
-          <p>-{{ cartService.totalDiscount() | number: "1.2-2" }}</p>
+          <div class="flex items-center">
+            <lucide-icon [img]="PhilippinePeso" class="w-4"></lucide-icon>
+            <p>-{{ cartService.totalDiscount() | number: "1.2-2" }}</p>
+          </div>
         </div>
       }
       <div class="flex justify-between mt-10 font-bold text-xl">
         <p>Total:</p>
-        <p>
+        <p class="flex items-center">
+          <lucide-icon [img]="PhilippinePeso" class="w-4"></lucide-icon>
           {{
             cartService.grandTotal() - cartService.totalDiscount()
               | number: "1.2-2"

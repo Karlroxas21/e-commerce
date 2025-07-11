@@ -88,6 +88,7 @@ export class CartSummary implements OnInit {
 
     if (this.isValidCoupon(code)) {
       this.applyCoupon(code);
+      console.log(this.cartItems());
     } else {
       console.log('INVALID COUPON BOY');
     }

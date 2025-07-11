@@ -1,11 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  OnInit,
-  Signal,
-  signal,
-} from '@angular/core';
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import {
   IProduct,
   Order,
@@ -26,7 +19,6 @@ import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { Categories } from '../categories/categories';
 import { SkeletonModule } from 'primeng/skeleton';
 import { CartSummary } from '../cart-summary/cart-summary';
 import { Cart } from '../../../service/cart/cart';
@@ -42,7 +34,6 @@ import { ActivatedRoute } from '@angular/router';
     FormsModule,
     PaginatorModule,
     MultiSelectModule,
-    Categories,
     SkeletonModule,
     CartSummary,
   ],
@@ -91,7 +82,7 @@ export class Products implements OnInit {
 
   selectedCategory: string | null = '';
 
-  protected quantitySignals = new Map<number, Signal<number>>();
+  protected quantitySignals = signal<Record<number, number>>({});
 
   loadAllProducts(options?: {
     limit?: number;
@@ -184,22 +175,25 @@ export class Products implements OnInit {
     this.updatePaginatedProducts();
   }
 
-  getQuantitySignal(productId: number): Signal<number> {
-    if (!this.quantitySignals.has(productId)) {
-      this.quantitySignals.set(
-        productId,
-        this.cartService.getQuantitySignal(productId),
-      );
+  getQuantitySignal(productId: number): number {
+    if (!this.quantitySignals()[productId]) {
+      this.quantitySignals.set([productId, 1]);
     }
-    return this.quantitySignals.get(productId)!;
+    return this.quantitySignals()[productId];
   }
 
   updateQuantity(productId: number, newQty: number) {
-    this.cartService.updateQuantity(productId, newQty < 1 ? 1 : newQty);
+    const current = this.quantitySignals();
+    // this.cartService.updateQuantity(productId, newQty < 1 ? 1 : newQty);
+    this.quantitySignals.set({
+      ...current,
+      [productId]: newQty,
+    });
   }
 
   // add quantity
   protected addToCartProduct(product: IProduct, qty: number) {
     this.cartService.addToCart(product, qty);
+    delete this.quantitySignals()[product.id];
   }
 }

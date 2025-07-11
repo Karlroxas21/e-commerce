@@ -24,7 +24,7 @@ export const COUPONS: Coupons[] = [
   },
   {
     name: 'HIREME',
-    rules: { minSubtotal: 0, percentage: 99, maxDiscountPerItem: 9999 },
+    rules: { minSubtotal: 0, percentage: 0.9, maxDiscountPerItem: 9999 },
   },
 ];
 
@@ -85,24 +85,28 @@ export class Cart {
     const current = this.cart();
     const existing = current[product.id];
 
-    this.cart.set({
-      ...current,
-      [product.id]: {
-        product,
-        quantity: existing ? existing.quantity + quantity : quantity,
-      },
-    });
+    if (existing) {
+      this.cart.set({
+        ...current,
+        [product.id]: {
+          product,
+          quantity: existing.quantity + quantity,
+        },
+      });
+    } else {
+      const temp = this.tempQuantities()[product.id] ?? 1;
+      this.cart.set({
+        ...current,
+        [product.id]: { product, quantity: temp },
+      });
 
-    const temp = this.tempQuantities()[product.id] ?? 1;
-    this.cart.set({
-      ...this.cart(),
-      [product.id]: { product, quantity: temp },
-    });
+      const updatedTemp = { ...this.tempQuantities() };
+      delete updatedTemp[product.id];
+      this.tempQuantities.set(updatedTemp);
+    }
 
-    const updatedTemp = { ...this.tempQuantities() };
-    delete updatedTemp[product.id];
-    this.tempQuantities.set(updatedTemp);
-
+    this.selectedCoupon.set(null);
+    this.isCouponInvalid.set(false);
     this.saveToLocalStorage();
   }
 

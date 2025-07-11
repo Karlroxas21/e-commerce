@@ -16,7 +16,7 @@
         }
       } @else {
         @for (product of paginatedProducts(); track product.id) {
-         @let quantity = getQuantitySignal(product.id)();
+         @let quantity = quantitySignals()[product.id] || 1;
 
           <div class="flex flex-col p-4 w-1/4 border rounded shadow h-auto transition duration-300 ease-in-out transform hover:scale-101">
             @if (product.images.length === 1) {
@@ -87,7 +87,7 @@
               </div>
               <div>
                 <button
-                (click)="addToCartProduct(product, quantity ?? 1)"
+                (click)="addToCartProduct(product, quantity)"
                   class="flex items-center justify-center w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-103 hover:cursor-pointer focus:outline-none focus:ring-4 focus:ring-blue-300"
                 >
                   <!-- Icon on the left -->
