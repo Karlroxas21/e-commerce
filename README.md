@@ -33,7 +33,7 @@ ng build
 - Cart Summary
 - Product categories list
 - Coupon Code discounts
-- Use signals, effect, and computed for state management
+- Uses signals, effect, and computed for state management
 
 ## Assumptions
 - No quantity limit
@@ -42,6 +42,8 @@ ng build
 - Only saves cart in local storage
 - Only GET the product
 - NOT production ready
+- No security configuration
+- No User management
 
 ## Time spent
 24 hours
