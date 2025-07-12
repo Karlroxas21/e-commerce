@@ -61,7 +61,7 @@ const product: IProduct = {
     'https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp',
 };
 
-describe('Cart', () => {
+describe('Cart Service', () => {
   let service: Cart;
 
   const mockItem = {
@@ -80,7 +80,7 @@ describe('Cart', () => {
     service = new Cart();
   });
 
-  it('should apply 10% discount if subtotal >= 100 and cap at 50 per item', () => {
+  it('SAVE10: should apply 10% discount if subtotal >= 100 and cap at 50 per item', () => {
     expect(service.calculateDiscount(mockItem, rules)).toBe(20);
 
     const cappedItem = {
@@ -90,7 +90,7 @@ describe('Cart', () => {
     expect(service.calculateDiscount(cappedItem, rules)).toBe(50); // Capped
   });
 
-  it('should return 0 if subtotal < $100', () => {
+  it('SAVE10: should return 0 if subtotal < $100', () => {
     const mockItem = {
       productId: 2,
       product: product, // $200 price

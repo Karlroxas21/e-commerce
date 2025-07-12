@@ -23,6 +23,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { CartSummary } from '../cart-summary/cart-summary';
 import { Cart } from '../../../service/cart/cart';
 import { ActivatedRoute } from '@angular/router';
+import { Categories } from '../categories/categories';
 
 @Component({
   selector: 'app-products',
@@ -36,6 +37,7 @@ import { ActivatedRoute } from '@angular/router';
     MultiSelectModule,
     SkeletonModule,
     CartSummary,
+    Categories,
   ],
   templateUrl: './products.html',
   styleUrl: './products.css',
@@ -63,7 +65,11 @@ export class Products implements OnInit {
     effect(() => {
       this.activatedRoute.queryParamMap.subscribe((params) => {
         this.selectedCategory = params.get('category');
-        this.getProductByCategory(this.selectedCategory);
+        if (this.selectedCategory) {
+          this.getProductByCategory(this.selectedCategory);
+        } else {
+          this.loadAllProducts({ limit: this.MAX_PRODUCT_LENGTH });
+        }
       });
     });
   }
@@ -77,8 +83,8 @@ export class Products implements OnInit {
 
   //   paginatedProducts?: IProduct[];
   paginatedProducts = signal<IProduct[]>([]);
-  currentPage = 0;
-  rowsPerPage = 9;
+  currentPage = signal<number>(0);
+  rowsPerPage = signal<number>(9);
 
   selectedCategory: string | null = '';
 
@@ -135,7 +141,6 @@ export class Products implements OnInit {
     this.productService.getProductByCategory(category).subscribe({
       next: (data) => {
         console.log('Product Category List: ', data);
-        // this.searchedProduct = data;
         this.paginatedProducts.set(data.products);
       },
       error: (err) => {
@@ -163,15 +168,15 @@ export class Products implements OnInit {
   ];
 
   private updatePaginatedProducts() {
-    const start = this.currentPage * this.rowsPerPage;
-    const end = start + this.rowsPerPage;
+    const start = this.currentPage() * this.rowsPerPage();
+    const end = start + this.rowsPerPage();
     // this.paginatedProducts = this.products?.products.slice(start, end);
     this.paginatedProducts.set(this.products!.products.slice(start, end));
   }
 
   protected onPageChange(event: PaginatorState) {
-    this.currentPage = event.page ?? 0;
-    this.rowsPerPage = event.rows ?? 10;
+    this.currentPage.set(event.page ?? 0);
+    this.rowsPerPage.set(event.rows ?? 10);
     this.updatePaginatedProducts();
   }
 
@@ -189,10 +194,13 @@ export class Products implements OnInit {
       ...current,
       [productId]: newQty,
     });
+
+    console.log('new qty:', newQty);
   }
 
   // add quantity
   protected addToCartProduct(product: IProduct, qty: number) {
+    console.log('add to cart qty:', qty);
     this.cartService.addToCart(product, qty);
     delete this.quantitySignals()[product.id];
   }

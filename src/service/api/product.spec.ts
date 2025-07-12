@@ -9,6 +9,7 @@ import {
   Product as ProductService,
   ProductResponse,
 } from './product';
+import { environment } from '../../environments/environment';
 
 describe('Product Service', () => {
   let service: ProductService;
@@ -160,7 +161,7 @@ describe('Product Service', () => {
       expect(res.total).toBeGreaterThanOrEqual(1);
     });
 
-    const req = httpMock.expectOne('https://dummyjson.com/products');
+    const req = httpMock.expectOne(`${environment.apiUrl}/products`);
     expect(req.request.method).toBe('GET');
 
     req.flush(mockResponse);
@@ -229,10 +230,10 @@ describe('Product Service', () => {
 
     service.findProductById(1).subscribe((res) => {
       expect(res).toBeTruthy();
-      expect(res.id).toBe(2);
+      expect(res.id).toBe(1);
     });
 
-    const req = httpMock.expectOne('https://dummyjson.com/products/1');
+    const req = httpMock.expectOne(`${environment.apiUrl}/products/1`);
     expect(req.request.method).toBe('GET');
 
     req.flush(mockResponse);

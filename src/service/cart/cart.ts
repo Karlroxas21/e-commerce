@@ -84,6 +84,12 @@ export class Cart {
   addToCart(product: IProduct, quantity: number) {
     const current = this.cart();
     const existing = current[product.id];
+    console.log(
+      'ADD to cart service qty: ',
+      quantity,
+      'temp qty: ',
+      this.tempQuantities()[product.id],
+    );
 
     if (existing) {
       this.cart.set({
@@ -94,7 +100,7 @@ export class Cart {
         },
       });
     } else {
-      const temp = this.tempQuantities()[product.id] ?? 1;
+      const temp = quantity ?? 1;
       this.cart.set({
         ...current,
         [product.id]: { product, quantity: temp },

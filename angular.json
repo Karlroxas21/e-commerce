@@ -56,7 +56,13 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "e-commerce:build:production"
+              "buildTarget": "e-commerce:build:production",
+              "fileReplacements": [
+                {
+                    "replace": "src/environments/environment.ts",
+                    "with": "src/environments/environment.prod.ts"
+                }
+              ]
             },
             "development": {
               "buildTarget": "e-commerce:build:development"

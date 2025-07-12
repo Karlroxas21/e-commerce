@@ -1,10 +1,20 @@
-<section>
-    @for (category of productCategories; track category) {
-        <a class="text-blue-600 underline" 
-        [routerLink]="['/products']" 
-        [queryParams]="{ category: category.slug}">
-        {{category.name}}
-        </a>
-        <p></p>
-    }
+<section class="p-20">
+  <a
+    class="text-blue-600 underline text-left"
+    [routerLink]="['/products']"
+  >
+    Clear
+  </a>
+  @for (category of productCategories; track category) {
+    <div class="flex flex-col items-start">
+      <a
+        class="text-blue-600 underline text-left"
+        [routerLink]="['/products']"
+        [queryParams]="{ category: category.slug }"
+      >
+        {{ category.name }}
+      </a>
+      <p></p>
+    </div>
+  }
 </section>

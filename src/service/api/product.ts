@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { addParamIfDefined } from '../../utils/url';
-
+import { environment } from '../../environments/environment';
 interface IDimensions {
   width: number;
   height: number;
@@ -87,7 +87,7 @@ export class Product {
     params = addParamIfDefined(params, 'order', options?.order);
 
     return this.http
-      .get<ProductResponse>('https://dummyjson.com/products', { params })
+      .get<ProductResponse>(`${environment.apiUrl}/products`, { params })
       .pipe(
         catchError((error) => {
           console.error('API error:', error);
@@ -97,7 +97,7 @@ export class Product {
   }
 
   findProductById(id: number): Observable<IProduct> {
-    return this.http.get<IProduct>(`https://dummyjson.com/products/${id}`).pipe(
+    return this.http.get<IProduct>(`${environment.apiUrl}/products/${id}`).pipe(
       catchError((error) => {
         console.error('API error: ', error);
         return throwError(() => new Error('Something went wrong'));
@@ -111,7 +111,7 @@ export class Product {
     params = addParamIfDefined(params, 'q', q);
 
     return this.http
-      .get<ProductResponse>(`https://dummyjson.com/products/search?`, {
+      .get<ProductResponse>(`${environment.apiUrl}/products/search?`, {
         params,
       })
       .pipe(
@@ -124,7 +124,7 @@ export class Product {
 
   getAllProductCategories(): Observable<ProductCategory[]> {
     return this.http
-      .get<ProductCategory[]>('https://dummyjson.com/products/categories')
+      .get<ProductCategory[]>(`${environment.apiUrl}/products/categories`)
       .pipe(
         catchError((error) => {
           console.error('API error:', error);
@@ -135,7 +135,7 @@ export class Product {
 
   getProductsCategoryList(): Observable<string[]> {
     return this.http
-      .get<string[]>('https://dummyjson.com/products/category-list')
+      .get<string[]>(`${environment.apiUrl}/products/category-list`)
       .pipe(
         catchError((error) => {
           console.error('API error:', error);
@@ -147,7 +147,7 @@ export class Product {
   getProductByCategory(category: string | null): Observable<ProductResponse> {
     return this.http
       .get<ProductResponse>(
-        `https://dummyjson.com/products/category/${category}`,
+        `${environment.apiUrl}/products/category/${category}`,
       )
       .pipe(
         catchError((error) => {
